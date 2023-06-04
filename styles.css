@@ -1,0 +1,42 @@
+.container {
+    background-color: orange;
+    padding: 20px;
+    width: 400px;
+  }
+  
+  form {
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+  
+  #guess-form {
+    display: flex;
+    flex-direction: row;
+  }
+  
+  #guess-form label {
+    margin-right: 10px;
+  }
+  
+  #result {
+    margin-top: 10px;
+  }
+  
+  #previous-guesses {
+    margin-top: 10px;
+  }
+  
+  #hints {
+    margin-top: 10px;
+  }
+  
+  .success {
+    background-color: red;
+    color: white;
+  }
+  
+  .error {
+    background-color: blue;
+    color: white;
+  }
+  

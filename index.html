@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Jogo de Adivinhação de Placar</title>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+  <style>
+    /* Estilos CSS adicionais (se necessário) */
+  </style>
+</head>
+<body>
+  <h1>Jogo de Adivinhação de Placar</h1>
+  <p>Você tem até 10 tentativas</p>
+  
+  <div class="container">
+    <p>Brasil&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Alemanha</p>
+    <div id="guess-form">
+      <form>
+        <input type="number" id="placar-brasil" min="0" max="10" disabled>
+      </form>
+      
+      <span>&nbsp;&nbsp;X&nbsp;&nbsp;</span>
+            
+      <form>
+        <input type="number" id="placar-alemanha" min="0" max="10" disabled>
+      </form>
+    </div>
+    
+    <button type="button" id="botao-verificar">Verificar</button>
+    <button type="button" id="botao-iniciar">Iniciar Jogo</button>
+    
+    <div id="resultado"></div>
+    <div id="palpites-anteriores"></div>
+    <div id="dicas"></div>
+  </div>
+  
+  <script>
+    var tentativas;
+    var placarAlvoBrasil, placarAlvoAlemanha;
+    var palpitesAnteriores = [];
+    
+    function iniciarJogo() {
+      tentativas = 10;
+      placarAlvoBrasil = Math.floor(Math.random() * 11);
+      placarAlvoAlemanha = Math.floor(Math.random() * 11);
+      palpitesAnteriores = [];
+      
+      document.getElementById("resultado").textContent = "";
+      document.getElementById("dicas").textContent = "";
+      document.getElementById("placar-brasil").value = ""; // Limpa o valor do campo de formulário
+      document.getElementById("placar-alemanha").value = ""; // Limpa o valor do campo de formulário
+      document.getElementById("botao-verificar").disabled = false;
+      document.getElementById("placar-brasil").disabled = false;
+      document.getElementById("placar-alemanha").disabled = false;
+      
+      var containerPalpitesAnteriores = document.getElementById("palpites-anteriores");
+      containerPalpitesAnteriores.innerHTML = ""; // Limpa o conteúdo dos palpites anteriores
+    }
+    
+    function resultadoPalpite() {
+      tentativas--;
+      
+      var placarBrasil = parseInt(document.getElementById("placar-brasil").value);
+      var placarAlemanha = parseInt(document.getElementById("placar-alemanha").value);
+      
+      if (placarBrasil > 10 || placarAlemanha > 10) {
+        alert("Apenas valores entre 0 e 10!");
+        return;
+      }
+      
+      var palpite = {
+        placarBrasil: placarBrasil,
+        placarAlemanha: placarAlemanha
+      };
+      
+      palpitesAnteriores.push(palpite);
+      atualizarPalpitesAnteriores();
+      
+      if (placarBrasil === placarAlvoBrasil && placarAlemanha === placarAlvoAlemanha) {
+        document.getElementById("resultado").textContent = "Você acertou. Parabéns!";
+        document.getElementById("resultado").className = "success";
+        document.getElementById("botao-verificar").disabled = true;
+        document.getElementById("placar-brasil").disabled = true;
+        document.getElementById("placar-alemanha").disabled = true;
+        
+        var botaoIniciar = document.getElementById("botao-iniciar");
+        botaoIniciar.textContent = "Reiniciar"; // Altera o texto do botão "Iniciar Jogo" para "Reiniciar"
+      } else if (tentativas === 0) {
+        document.getElementById("botao-verificar").disabled = true;
+        document.getElementById("placar-brasil").disabled = true;
+        document.getElementById("placar-alemanha").disabled = true;
+        
+        var botaoIniciar = document.getElementById("botao-iniciar");
+        botaoIniciar.textContent = "Reiniciar"; // Altera o texto do botão "Iniciar Jogo" para "Reiniciar"
+      } else {
+        var dica = "";
+        if (placarBrasil > placarAlvoBrasil) {
+          dica += "O Brasil fez menos gols.\n";
+        } else if (placarBrasil < placarAlvoBrasil) {
+          dica += "O Brasil fez mais gols.\n";
+        }
+
+        if (placarAlemanha > placarAlvoAlemanha) {
+          dica += "A Alemanha fez menos gols.";
+        } else if (placarAlemanha < placarAlvoAlemanha) {
+          dica += "A Alemanha fez mais gols.";
+        }
+
+        document.getElementById("resultado").textContent = "Errado!";
+        document.getElementById("resultado").className = "error";
+        
+        var dicasElemento = document.getElementById("dicas");
+        dicasElemento.textContent = dica;
+        dicasElemento.style.textAlign = "left";
+        dicasElemento.style.fontWeight = "normal";
+      }
+    }
+    
+    function atualizarPalpitesAnteriores() {
+      var containerPalpitesAnteriores = document.getElementById("palpites-anteriores");
+      containerPalpitesAnteriores.textContent = "Palpites Anteriores: ";
+      
+      for (var i = 0; i < palpitesAnteriores.length; i++) {
+        var palpite = palpitesAnteriores[i];
+        containerPalpitesAnteriores.textContent += palpite.placarBrasil + "x" + palpite.placarAlemanha;
+        
+        if (i !== palpitesAnteriores.length - 1) {
+          containerPalpitesAnteriores.textContent += " || ";
+        }
+      }
+    }
+    
+    document.getElementById("botao-verificar").addEventListener("click", resultadoPalpite);
+    document.getElementById("botao-iniciar").addEventListener("click", iniciarJogo);
+    
+    iniciarJogo();
+  </script>
+</body>
+</html>
